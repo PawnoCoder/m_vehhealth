@@ -1,6 +1,6 @@
 /*
 
-	About: Vehicle health changed callback v2.1
+	About: Vehicle health changed callback v2.2
 	Author: Noname
 
 */
@@ -22,31 +22,15 @@
 	Define const
 */
 
-#if !defined VHEALTH_TICKRATE
-	#define VHEALTH_TICKRATE 300
+#if !defined VHEALTH_INTERVAL
+	#define VHEALTH_INTERVAL 300
 #endif
 
-#if !defined FIX_const
-	#define FIX_const 0
-	#define M_VEHHEALTH_FIX_CLEAR
-#endif
+/*
+	Natives
+*/
 
-#if !FIX_const
-	native MVH_SetTimer(const funcname[], interval, repeating) = SetTimer;
-
-	#if defined _ALS_SetTimer
-		#undef SetTimer
-	#else
-		#define _ALS_SetTimer
-	#endif
-
-	#define SetTimer( MVH_SetTimer(
-
-	#if defined M_VEHHEALTH_FIX_CLEAR
-		#undef M_VEHHEALTH_FIX_CLEAR
-		#undef FIX_const
-	#endif
-#endif
+native __m_vehhealth__SetTimer(const funcname[], interval, repeating) = SetTimer;
 
 /*
 	Forwards
@@ -133,7 +117,7 @@ public VHealth_OccupiedVehicleTimer()
 		GetVehicleHealth(vehicleid, new_health);
 		CLF_Callback(vehicleid, vh_vehicle_player_id[vehicleid], vh_vehicle_old_health[vehicleid], new_health, false);
 	}
-	vh_server_timer_id = SetTimer(!"VHealth_OccupiedVehicleTimer", VHEALTH_TICKRATE, false);
+	vh_server_timer_id = __m_vehhealth__SetTimer(!"VHealth_OccupiedVehicleTimer", VHEALTH_INTERVAL, false);
 	return 1;
 }
 
@@ -143,7 +127,7 @@ public VHealth_OccupiedVehicleTimer()
 
 public OnGameModeInit()
 {
-	vh_server_timer_id = SetTimer(!"VHealth_OccupiedVehicleTimer", VHEALTH_TICKRATE, false);
+	vh_server_timer_id = __m_vehhealth__SetTimer(!"VHealth_OccupiedVehicleTimer", VHEALTH_INTERVAL, false);
 
 	#if defined m_vhealth_OnGameModeInit
 		return m_vhealth_OnGameModeInit();
